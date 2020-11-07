@@ -1,6 +1,4 @@
-# react-todo
-
-### Requirements
+# react-todo -  Requirements
 
 ## Todo Page
 * Add Todo
@@ -14,5 +12,8 @@
 * go back
 * save, cancel, delete => after finishing page goes back to Todo Page
 
+## Todo UI
 ![TODO](todo.png)
+
+## Todo Edit UI
 ![Edit Todo](task.png)
