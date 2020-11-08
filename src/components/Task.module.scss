@@ -1,0 +1,33 @@
+%flexPos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+tr {
+  td,
+  th {
+    text-align: center;
+  }
+  display: grid;
+  grid-template-columns: 10fr 50fr 40fr;
+  .number {
+    text-align: center;
+    @extend %flexPos;
+  }
+  .name {
+    text-align: center;
+    @extend %flexPos;
+  }
+  .action {
+    @extend %flexPos;
+    flex-direction: row;
+    button {
+      margin-right: 5px;
+      height: 25px;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      @extend %flexPos;
+    }
+  }
+}

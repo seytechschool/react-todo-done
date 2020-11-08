@@ -1,0 +1,63 @@
+%flexPos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toDoWrapper {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .addToDo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px 0;
+    input {
+      width: calc(100% - 10px - 100px);
+      margin-right: 10px;
+    }
+    button {
+      width: 100px;
+    }
+  }
+  .tabs {
+    align-self: start;
+    Button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      margin-right: 5px;
+      margin-bottom: 1px;
+      .link {
+        text-decoration: none;
+        color: white;
+      }
+    }
+    span {
+      background-color: white;
+      color: black;
+      font-weight: bold;
+      border-radius: 2px;
+      box-sizing: border-box;
+      padding: 1px 5px;
+      font-size: 12px;
+    }
+    Table {
+      td,
+      th {
+        text-align: center;
+      }
+    }
+    Portal {
+      max-width: 500px;
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}
