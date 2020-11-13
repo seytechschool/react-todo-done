@@ -1,44 +1,10 @@
 # react-todo - Requirements
 
-## Todo Page
+## Tasks
 
-- Add Todo
-- Show active/done todos
-- Mark as done tasks
-- Delete tasks
-- Edit button goes to another route
+- Get todos from https://jsonplaceholder.typicode.com/todos and use it as an initial data
+- While loading data show loading animation.
+- Deploy to heroku
+- Make it persistent (localstorage)
+- Convert to hooks
 
-## Todo Edit Page
-
-- go back
-- save, cancel, delete => after finishing page goes back to Todo Page
-
-## Todo UI
-
-![TODO](todo.png)
-
-## Todo Edit UI
-
-![Edit Todo](task.png)
-
-######################################################################
-
-# DESING PLAN
-
-App()
-Router
-state[
-isActive: true
-]
-TodoList()
-TodoItem()
-edit btn -> routes to Edit() component
-done btn -> change state isActive to false
-
-     Edit()
-        <Link> </Link>
-        go back btn ->history.push(url) (react-router-dom)
-        new input content -> change state by callback func to APP()
-        delete btn -> callback func, use filter and pass an id to App() and update set
-
-     Addtodo()
