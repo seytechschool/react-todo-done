@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, Input, InputGroupAddon } from 'reactstrap';
 // import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
@@ -7,56 +7,73 @@ import s from './EditTask.module.scss';
 
 class EditTask extends React.Component {
   constructor(props) {
-    super();
-    this.ind = props.tasks.findIndex((item) => item.id === props.id);
+    super(props);
+    const {tasks, history, match:{params:{id}}} = props;
+    let task = tasks.find(item => item.id === Number(id));
+    // if couldn't find a task redirect to main page
+    if(!task){
+      history.push('/');
+      task = {}
+    }
     this.state = {
-      originalName: props.tasks[this.ind].name,
-      newName: props.tasks[this.ind].name,
+      task,
+      newName: task.title,
+      modal: true
     };
   }
 
-  onChange = (e) => {
-    this.setState({ newName: e.target.value });
-  };
+  onChange = e => this.setState({ newName: e.target.value })
 
   onGoBack = () => {
-    this.props.history.goBack();
+    // close modal
+    this.setState({ modal:false})
+    // go back after 200ms. after animation finishes
+    setTimeout(()=>this.props.history.push('/'), 200)
   };
 
   onSave = () => {
-    this.props.saveEdit(this.state.newName);
-    this.props.history.push('/');
+    const {task, newName} = this.state;
+    task.title = newName;
+    this.props.updateTask(task);
+    this.onGoBack()
   };
 
   onCancel = () => {
-    this.setState({ newName: this.state.originalName });
+    // update task with original
+    this.setState({ newName: this.state.task.title });
+    // go back
+    this.onGoBack()
   };
 
   onDelete = () => {
-    this.props.deleteTask(this.props.id);
-    this.props.history.push('/');
+    // delete a task go back
+    const {task} = this.state;
+    const {deleteTask} = this.props;
+    deleteTask(task);
+    this.onGoBack()
   };
 
+  toggle = () => this.setState({ modal: !this.state.modal });
+
   render() {
+    const {modal, newName} = this.state;
     return (
       <div className={s.editWrapper}>
-        <Button className={s.goBack} onClick={this.onGoBack} color="primary">
-          go back
-        </Button>
-        <input onChange={(e) => this.onChange(e)} value={this.state.newName}></input>
-        <div className={s.buttonWrapper}>
-          <Button onClick={this.onSave} color="primary">
-            Save
-          </Button>
-
-          <Button onClick={this.onCancel} color="secondary">
-            Cancel
-          </Button>
-
-          <Button onClick={this.onDelete} color="danger">
-            Delete
-          </Button>
-        </div>
+        <Modal isOpen={modal} toggle={this.toggle}>
+        <ModalHeader toggle={this.toggle}>Edit</ModalHeader>
+        <ModalBody>
+          <InputGroup>
+            <Input type="text" onChange={this.onChange} value={newName} />
+            <InputGroupAddon addonType="append">
+              <Button onClick={this.onDelete} color="danger">Delete</Button>
+            </InputGroupAddon>
+          </InputGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button className="mr-1" onClick={this.onSave} color="primary">Save</Button>
+          <Button onClick={this.onCancel} color="secondary">Cancel</Button>
+        </ModalFooter>
+      </Modal>
       </div>
     );
   }
