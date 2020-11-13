@@ -8,3 +8,10 @@
 - Make it persistent (localstorage)
 - Convert to hooks
 
+## Todo UI
+
+![TODO](todo.png)
+
+## Todo Edit UI
+
+![Edit Todo](task.png)
