@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table, Alert, InputGroup, Input, InputGroupAddon } from 'reactstrap';
+import { Button, Table, Alert, InputGroup, Input, InputGroupAddon, Spinner } from 'reactstrap';
 import { Switch, Route } from 'react-router-dom';
 
 import s from './ToDoList.module.scss';
@@ -7,26 +7,32 @@ import Task from './Task';
 import EditTask from './EditTask';
 import ToastComponent from './ToastComponent';
 
-const testData = [
-  { id: 1, title: 'Learn React', completed: true },
-  { id: 2, title: 'Drink Coffee', completed: true },
-  { id: 3, title: 'Debug Portal', completed: true },
-  { id: 4, title: 'Run 1 Mile', completed: true },
-  { id: 5, title: 'Call Parents', completed: false },
-];
-
+const JSON_API = "https://jsonplaceholder.typicode.com/todos";
 class ToDoList extends React.Component {
   constructor() {
     super();
     this.state = {
-      tasks: testData,
+      tasks: [],
       showCompleted: false,
       newTask: '',
       lastIdUsed: 1000,
-      toastInfo:{showToast: false, text:'', action:''}
+      toastInfo:{showToast: false, text:'', action:''},
+      isLoading: false,
+      error: ''
     };
   }
 
+  componentDidMount() {
+    const { isLoading} = this.state;
+    this.setState({ isLoading: true});
+      fetch(JSON_API)
+      .then(res => res.json())
+      .then(testData => {
+        this.setState({ tasks: testData, isLoading: false })
+      }).catch(error => {
+        this.setState({ error: error.message, isLoading: false})
+      })
+  }
   addTask = () => {
     const { tasks, newTask, lastIdUsed } = this.state;
     // get new task id based on last used id
@@ -83,25 +89,45 @@ class ToDoList extends React.Component {
     const {showCompleted, tasks} = this.state;
     let activeTodoCount = 0;
     let doneTodoCount = 0;
-    const activeTabTasks = tasks.filter(item=>{
-      // count doneTodo and activeTodo
-      if(item.completed){
-        doneTodoCount++
-      } else {
-        activeTodoCount++
-      }
-      // filter only active tab tasks
-      return item.completed === showCompleted
-    });
+    // if( tasks) {
+      let activeTabTasks = tasks.filter(item=>{
+        // count doneTodo and activeTodo
+        if(item.completed){
+          doneTodoCount++
+        } else {
+          activeTodoCount++
+        }
+        // filter only active tab tasks
+        return item.completed === showCompleted
+      });
+    // }
     return {activeTodoCount, doneTodoCount, activeTabTasks}
   }
 
   render() {
-    const { showCompleted, newTask, tasks, toastInfo } = this.state;
+    const { showCompleted, newTask, tasks, toastInfo, isLoading, error } = this.state;
+    let { activeTodoCount, doneTodoCount, activeTabTasks } = this.prepareTodos();
 
-    // get activeTodoTask, activeTodoCount, doneTodoCount
-    const { activeTodoCount, doneTodoCount, activeTabTasks } = this.prepareTodos();
-    console.log("tasks",tasks)
+    let content;
+
+    if (isLoading) {
+      content = <Spinner color="primary" />
+    }
+    // we can think about it.
+    if (error.length > 0) {
+      content =  <Alert color="info">Server error. Please try again!</Alert>;
+    }
+
+    if(tasks && tasks.length > 0) {
+      content = (
+        <Switch>
+        <Route path="/edit/:id">
+          <EditTask updateTask={this.updateTask} deleteTask={this.onDelete} tasks={tasks} />
+        </Route>
+      </Switch>
+      )
+    }
+
     return (
         <div className={s.toDoWrapper}>
           {/* show/hide toast */}
@@ -147,13 +173,7 @@ class ToDoList extends React.Component {
               })}
             </tbody>
           </Table>
-          { !activeTabTasks.length && <Alert color="info">No Data</Alert>}
-          {/* router switches */}
-          <Switch>
-              <Route path="/edit/:id">
-                <EditTask updateTask={this.updateTask} deleteTask={this.onDelete} tasks={tasks} />
-              </Route>
-            </Switch>
+            {content}
             {/* end of switches */}
         </div>
     );

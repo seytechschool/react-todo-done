@@ -10,7 +10,7 @@ function Task (props) {
   const doneUnDone = completed ? 'Undone' : 'Done';
   return (
     <tr>
-      <th className={s.number}>{rowNum}</th>
+      <td className={s.number}>{rowNum}</td>
       <td className={s.title}>{title}</td>
       <td>
         <div className={s.action}>

@@ -57,10 +57,11 @@ class EditTask extends React.Component {
 
   render() {
     const {modal, newName} = this.state;
+
     return (
       <div className={s.editWrapper}>
-        <Modal isOpen={modal} toggle={this.toggle}>
-        <ModalHeader toggle={this.toggle}>Edit</ModalHeader>
+        <Modal isOpen={modal} toggle={this.onCancel} >
+    <ModalHeader toggle={this.onCancel}>Edit - <span style={{color: "green"}}>{newName}</span></ModalHeader>
         <ModalBody>
           <InputGroup>
             <Input type="text" onChange={this.onChange} value={newName} />
